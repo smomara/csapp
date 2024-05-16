@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <limits.h>
 
 /**
@@ -47,6 +48,17 @@ int tsub_ok(int x, int y) {
     return tadd_ok(x, -y);
 }
 
+/**
+ * Practice Problem 2.36
+ * ---------------------
+ * For the case where data type int has 32 bits, devise a version of tmult_ok
+ * that uses the 65-bit precision data type int64_t, without using division.
+*/
+int tmult_ok(int32_t x, int32_t y) {
+    int64_t p = (int64_t) x * y;
+    return p == (int32_t) p;
+}
+
 /* Main function to test uadd_ok, tadd_ok, and tsub_ok */
 int main() {
     unsigned a = ~0; // ones
@@ -61,9 +73,14 @@ int main() {
     printf("signed: %d + %d = %d\tok? %d\n", d, d, d + d, tadd_ok(d, d));     // expect 0 (false - negative overflow)
     printf("signed: %d + %d = %d\tok? %d\n", c, d, c + d, tadd_ok(c, d));     // expect 1 (true)
     
-    printf("signed: %d - %d = %d\tok? %d\n", d, c, d - c, tsub_ok(d, c));     // expect 1 (true)
     printf("signed: %d - %d = %d\tok? %d\n", c, d, c - d, tsub_ok(c, d));     // expect 0 (false - positive overflow)
+    printf("signed: %d - %d = %d\tok? %d\n", d, c, d - c, tsub_ok(d, c));     // expect 0 (false - negative overflow)
     printf("signed: %d - %d = %d\tok? %d\n", c, c, c - c, tsub_ok(c, c));     // expect 1 (true)
     
+    printf("signed 32: %d * %d = %d\tok? %d\n", c, 2, c * 2, tmult_ok(c, 2)); // expect 0 (false - positive overflow)
+    printf("signed 32: %d * %d = %d\tok? %d\n", d, 2, d * 2, tmult_ok(d, 2)); // expect 0 (false - negative overflow)
+    printf("signed 32: %d * %d = %d\tok? %d\n", 3, 2, 3 * 2, tmult_ok(3, 2)); // expect 1 (true)
+    printf("signed 32: %d * %d = %d\tok? %d\n", c, b, c * b, tmult_ok(c, b)); // expect 1 (true)
+
     return 0;
 }
