@@ -10,22 +10,16 @@
 #include <stdio.h>
 
 unsigned replace_byte(unsigned x, int i, unsigned char b) {
-    // Create a mask with the byte at position i set to 0xFF, and the rest set to 0
-    // 0xFF is 11111111 in binary, so shifting it left by i*8 positions moves it to the byte we want to replace
+    // create a mask where only the bits we want to replace are 1
     unsigned mask = 0xFF << (i * 8);
 
-    // Clear the byte at position i in the original number x
-    // ~mask inverts the mask, turning the 0xFF byte to 0x00 and all other bytes to 0xFF
-    // ANDing this with x clears the desired byte while keeping all other bytes unchanged
+    // clear the bits that we are replacing in x
     unsigned x_masked = x & (~mask);
 
-    // Shift the new byte b to the correct position
-    // Cast b to unsigned to ensure the shift operation is performed correctly
-    // Shifting left by i*8 positions moves the byte b to the correct position in the word
+    // create an unsigned where the only non-zero bits are the ones we are using to replace
     unsigned b_masked = ((unsigned) b) << (i * 8);
 
-    // Combine the modified original number with the new byte
-    // ORing the two values sets the byte at position i to b, while leaving all other bytes unchanged
+    // combine
     return x_masked | b_masked;
 }
 
